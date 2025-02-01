@@ -1,6 +1,6 @@
 site_name: ClickHouse SQL Reference Sheet # Name of the documentation site
-site_url: https://your-username.github.io/click_reference_sheet/ # Update with your GitHub username
-repo_url: https://github.com/your-username/click_reference_sheet # Update with your GitHub username
+site_url: https://maruthiprithivi.github.io/click_reference_sheet/ # Update with your GitHub username
+repo_url: https://github.com/maruthiprithivi/click_reference_sheet # Update with your GitHub username
 repo_name: click_reference_sheet
 edit_uri: edit/main/docs/
 site_description: A comprehensive SQL command reference sheet for ClickHouse Cloud field engineers # Site description
@@ -17,14 +17,18 @@ theme:
     - content.code.copy
     - content.code.annotate # Enable code annotation
   palette:
-    - scheme: default
-      primary: blue
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
       accent: blue
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-    - scheme: slate
-      primary: blue
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
       accent: blue
       toggle:
         icon: material/brightness-4

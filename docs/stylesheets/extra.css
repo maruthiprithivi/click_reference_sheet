@@ -1,0 +1,142 @@
+/* ClickHouse Brand Colors */
+:root {
+  --ch-accent: #0096ff; /* Bright blue instead of yellow */
+  --ch-accent-light: #40afff; /* Lighter blue for hover states */
+  --ch-black: #1c1c1c;
+  --ch-dark-gray: #2a2a2a;
+  --ch-light-gray: #e5e5e5;
+}
+
+/* Dark theme customization */
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: var(--ch-black);
+  --md-primary-fg-color--light: var(--ch-accent);
+  --md-primary-fg-color--dark: var(--ch-dark-gray);
+  --md-accent-fg-color: var(--ch-accent);
+  --md-typeset-a-color: var(--ch-accent);
+
+  /* Background colors */
+  --md-default-bg-color: var(--ch-black);
+  --md-footer-bg-color: var(--ch-dark-gray);
+
+  /* Code blocks */
+  --md-code-bg-color: var(--ch-dark-gray);
+  --md-code-fg-color: var(--ch-light-gray);
+}
+
+/* Light theme customization */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color: var(--ch-black);
+  --md-primary-fg-color--light: var(--ch-accent);
+  --md-primary-fg-color--dark: var(--ch-dark-gray);
+  --md-accent-fg-color: var(--ch-accent);
+  --md-typeset-a-color: var(--ch-accent);
+}
+
+/* Navigation */
+.md-nav__link:active,
+.md-nav__link:hover {
+  color: var(--ch-accent);
+}
+
+/* Headers */
+.md-typeset h1 {
+  color: var(--ch-accent);
+  font-weight: bold;
+}
+
+/* Code blocks */
+.highlight pre {
+  background-color: var(--ch-dark-gray) !important;
+}
+
+/* Search box */
+.md-search__input {
+  background-color: var(--ch-dark-gray);
+}
+
+/* Buttons */
+.md-button {
+  background-color: var(--ch-accent) !important;
+  color: white !important;
+  border: none !important;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.md-button:hover {
+  background-color: var(--ch-accent-light) !important;
+  color: white !important;
+}
+
+/* Tables */
+.md-typeset table:not([class]) {
+  background-color: var(--ch-dark-gray);
+  border: 1px solid var(--ch-accent);
+}
+
+.md-typeset table:not([class]) th {
+  background-color: var(--ch-black);
+  color: var(--ch-accent);
+}
+
+/* Admonitions */
+.md-typeset .admonition {
+  border-left-color: var(--ch-accent);
+}
+
+.md-typeset .admonition-title {
+  background-color: var(--ch-dark-gray);
+}
+
+/* Tabs */
+.md-tabs__link {
+  color: var(--ch-light-gray);
+}
+
+.md-tabs__link--active,
+.md-tabs__link:hover {
+  color: var(--ch-accent);
+}
+
+/* Footer */
+.md-footer {
+  background-color: var(--ch-black);
+}
+
+.md-footer-meta {
+  background-color: var(--ch-dark-gray);
+}
+
+/* Code copy button */
+.md-clipboard {
+  color: var(--ch-accent);
+}
+
+/* Search results */
+.md-search-result__item {
+  background-color: var(--ch-dark-gray);
+}
+
+.md-search-result__link:hover {
+  background-color: var(--ch-black);
+}
+
+/* Links */
+.md-typeset a {
+  color: var(--ch-accent);
+  transition: color 0.2s ease-in-out;
+}
+
+.md-typeset a:hover {
+  color: var(--ch-accent-light);
+}
+
+/* Navigation drawer */
+.md-nav__item .md-nav__link--active {
+  color: var(--ch-accent);
+}
+
+/* Table of contents */
+.md-nav--secondary .md-nav__link--active {
+  color: var(--ch-accent);
+}
