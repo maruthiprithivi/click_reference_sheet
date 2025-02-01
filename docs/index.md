@@ -1,6 +1,7 @@
 # ClickHouse SQL Reference Sheet
 
-A comprehensive SQL command reference sheet for ClickHouse Cloud field engineers. This guide provides essential SQL commands, best practices, and optimization techniques for working with ClickHouse deployments.
+A comprehensive SQL command reference sheet for ClickHouse Cloud field engineers. This guide provides essential SQL
+commands, best practices, and optimization techniques for working with ClickHouse deployments.
 
 ## Quick Reference
 

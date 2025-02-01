@@ -8,9 +8,5 @@ mdformat-gfm>=0.3.5  # GitHub Flavored Markdown support
 mdformat-frontmatter>=2.0.1  # YAML frontmatter support
 mdformat-footnote>=0.1.1  # Footnote support
 
-# Testing and Linting
-pytest>=7.4.3
-ruff>=0.9.4
-
 # Documentation Testing
 linkchecker>=10.3.0

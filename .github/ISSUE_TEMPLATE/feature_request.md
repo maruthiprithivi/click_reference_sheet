@@ -1,22 +1,20 @@
 ---
 name: Feature Request
 about: Suggest an idea for this documentation
-title: "[FEATURE] "
+title: '[FEATURE] '
 labels: enhancement
-assignees: ""
+assignees: ''
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**Is your feature request related to a problem? Please describe.** A clear and concise description of what the problem
+is. Ex. I'm always frustrated when \[...\]
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**Describe the solution you'd like** A clear and concise description of what you want to happen.
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+**Describe alternatives you've considered** A clear and concise description of any alternative solutions or features
+you've considered.
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**Additional context** Add any other context or screenshots about the feature request here.
 
 **SQL Examples (if applicable)**
 
@@ -25,8 +23,7 @@ Add any other context or screenshots about the feature request here.
 SELECT example FROM table;
 ```
 
-**Documentation Section**
-Which section of the documentation would this feature belong to?
+**Documentation Section** Which section of the documentation would this feature belong to?
 
 - [ ] Basic Operations
 - [ ] Data Operations

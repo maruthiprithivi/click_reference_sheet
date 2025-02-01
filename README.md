@@ -1,6 +1,7 @@
 # ClickHouse SQL Reference Sheet
 
-A comprehensive SQL command reference sheet for ClickHouse Cloud field engineers. This documentation is built using Material for MkDocs and contains essential SQL commands, best practices, and optimization techniques.
+A comprehensive SQL command reference sheet for ClickHouse Cloud field engineers. This documentation is built using
+Material for MkDocs and contains essential SQL commands, best practices, and optimization techniques.
 
 [![Deploy MkDocs to GitHub Pages](https://github.com/your-username/click_reference_sheet/actions/workflows/deploy.yml/badge.svg)](https://github.com/your-username/click_reference_sheet/actions/workflows/deploy.yml)
 
@@ -155,11 +156,9 @@ The pre-commit hooks will:
 - Check for trailing whitespace
 - Fix end of files
 - Check YAML formatting
-- Prevent large file commits
+- Prevent large files (>1MB)
 - Check for merge conflicts
-- Enforce consistent line endings
 - Format Markdown files using mdformat (with GitHub Flavored Markdown support)
-- Format and lint Python code using Ruff (combines functionality of Black, isort, and Flake8)
 
 3. Run pre-commit manually (optional):
 
@@ -167,15 +166,11 @@ The pre-commit hooks will:
 pre-commit run --all-files
 ```
 
-4. Run formatters manually (optional):
+4. Run formatter manually (optional):
 
 ```bash
 # Format Markdown files
 mdformat .
-
-# Format and lint Python code
-ruff format .
-ruff check . --fix
 ```
 
 ### Testing Changes
@@ -206,7 +201,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you need help or have questions:
 
-1. Check the [Issues](https://github.com/maruthiprithivi/click_reference_sheet/issues) page for existing problems and solutions
+1. Check the [Issues](https://github.com/maruthiprithivi/click_reference_sheet/issues) page for existing problems and
+   solutions
 2. Create a new issue if you can't find an answer
 3. Join our [Discussion](https://github.com/maruthiprithivi/click_reference_sheet/discussions) forum
 
@@ -223,4 +219,5 @@ The status of the latest deployment can be seen at the top of this README.
 
 ## 📈 Project Status
 
-This is an active project that is regularly maintained and updated. We welcome contributions from the community to help improve and expand the reference sheet.
+This is an active project that is regularly maintained and updated. We welcome contributions from the community to help
+improve and expand the reference sheet.

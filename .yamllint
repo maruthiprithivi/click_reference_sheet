@@ -7,6 +7,10 @@ rules:
   document-start: disable
   truthy:
     check-keys: false
+  comments:
+    min-spaces-from-content: 1 # Require at least one space before comments
+    require-starting-space: true
+    level: warning
 
 ignore: |
   .git/

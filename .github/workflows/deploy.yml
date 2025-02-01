@@ -1,42 +1,32 @@
 name: Deploy MkDocs to GitHub Pages
+
 on:
   push:
     branches:
-      - main # Set this to your default branch
-  workflow_dispatch:
+      - main # Set a branch to deploy
+  workflow_dispatch: # Allow manual triggering
 
 permissions:
-  contents: write
+  contents: write # Allows pushing to the repository
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
 
-      - name: Set up Python
+      - name: Set up Python # Ensure Python is set up
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: 3.x
+          cache: "pip" # Cache pip dependencies
 
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install dependencies
+      - name: Install dependencies # Install project dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install mkdocs-material
 
-      - name: Build site
-        run: mkdocs build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
+      - name: Deploy to GitHub Pages # Deploy documentation
+        run: mkdocs gh-deploy --force

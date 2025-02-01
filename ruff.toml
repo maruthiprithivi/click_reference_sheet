@@ -29,4 +29,4 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 
 # Automatically detect the appropriate line ending.
-line-ending = "auto" 
+line-ending = "auto"

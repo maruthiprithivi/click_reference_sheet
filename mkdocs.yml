@@ -1,49 +1,71 @@
-site_name: ClickHouse SQL Reference Sheet
-site_url: https://your-username.github.io/click_reference_sheet/ # Update this with your GitHub username
-repo_url: https://github.com/your-username/click_reference_sheet # Update this with your GitHub username
+site_name: ClickHouse SQL Reference Sheet # Name of the documentation site
+site_url: https://your-username.github.io/click_reference_sheet/ # Update with your GitHub username
+repo_url: https://github.com/your-username/click_reference_sheet # Update with your GitHub username
 repo_name: click_reference_sheet
 edit_uri: edit/main/docs/
+site_description: A comprehensive SQL command reference sheet for ClickHouse Cloud field engineers # Site description
 
 theme:
   name: material
+  language: en
   features:
-    - navigation.instant
-    - navigation.tracking
-    - navigation.indexes
+    - navigation.tabs
+    - navigation.sections
     - navigation.top
-    - toc.follow
     - search.suggest
     - search.highlight
     - content.code.copy
+    - content.code.annotate # Enable code annotation
   palette:
     - scheme: default
-      primary: indigo
-      accent: indigo
+      primary: blue
+      accent: blue
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - scheme: slate
-      primary: indigo
-      accent: indigo
+      primary: blue
+      accent: blue
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
 
+plugins:
+  - search
+  - minify:
+      minify_html: true
+      minify_js: true
+      htmlmin_opts:
+        remove_comments: true # Remove HTML comments during minification
+
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
+      line_spans: __code
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
-  - admonition
-  - pymdownx.details
-  - tables
-  - def_list
   - attr_list
   - md_in_html
-  - toc:
-      permalink: true
-      toc_depth: 3
+  - tables
+  - footnotes
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true # Enable custom checkboxes
 
 nav:
-  - Reference Sheet: index.md
+  - Home: index.md
+  - Basic Operations:
+      - Connection: basic-operations/connection.md
+      - Databases: basic-operations/databases.md
+      - Tables: basic-operations/tables.md
+  - Data Operations:
+      - Inserting Data: data-operations/insert.md
+      - Querying Data: data-operations/select.md
+      - Updating Data: data-operations/update.md
+  - System Commands:
+      - Monitoring: system-commands/monitoring.md
+      - Performance: system-commands/performance.md
+  - Advanced Operations:
+      - Materialized Views: advanced-operations/materialized-views.md
+      - Distributed Tables: advanced-operations/distributed-tables.md
