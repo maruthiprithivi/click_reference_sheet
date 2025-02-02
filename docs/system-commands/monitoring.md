@@ -1,292 +1,230 @@
-# System Monitoring
+# ClickHouse System Monitoring Guide
 
-Essential commands for monitoring and diagnosing ClickHouse system performance.
+A comprehensive guide for monitoring ClickHouse deployments.
 
-## System Health
+## System Health Monitoring
 
-### Basic Health Checks
-
-```sql
--- Check system version and uptime
-SELECT
-    version() AS version,
-    uptime() AS uptime_seconds,
-    formatReadableTimeDelta(uptime()) AS uptime_readable;
-
--- Check system settings
-SELECT
-    name,
-    value,
-    changed,
-    description
-FROM system.settings
-WHERE changed = 1;
-```
-
-### Resource Usage
+### Memory Usage
 
 ```sql
--- Memory usage
-SELECT
-    metric,
-    value,
-    description
-FROM system.metrics
-WHERE metric LIKE '%Memory%'
-ORDER BY metric;
-
--- CPU usage
-SELECT *
-FROM system.metrics
-WHERE metric LIKE '%CPU%'
-   OR metric LIKE '%Thread%';
-```
-
-## Query Monitoring
-
-### Active Queries
-
-```sql
--- List running queries
+-- Current memory usage by query
 SELECT
     query_id,
     user,
-    address,
-    query,
-    read_rows,
-    read_bytes,
-    total_rows_approx,
-    formatReadableSize(memory_usage) AS memory,
-    elapsed
+    formatReadableSize(memory_usage) as mem_used,
+    formatReadableSize(peak_memory_usage) as peak_mem,
+    query
 FROM system.processes
-ORDER BY elapsed DESC;
+ORDER BY memory_usage DESC;
 
--- Find long-running queries
+-- Historical memory usage patterns
 SELECT
     query_id,
-    user,
-    query,
-    elapsed,
-    formatReadableSize(memory_usage) AS memory
-FROM system.processes
-WHERE elapsed > 60
-ORDER BY elapsed DESC;
-```
-
-### Query History
-
-```sql
--- Recent query statistics
-SELECT
-    type,
-    query,
-    query_start_time,
+    formatReadableSize(memory_usage) as mem_used,
+    formatReadableSize(peak_memory_usage) as peak_mem,
     query_duration_ms,
-    read_rows,
-    read_bytes,
-    result_rows,
-    result_bytes,
-    memory_usage
+    query
 FROM system.query_log
-WHERE type >= 2
-  AND event_date >= today() - 1
-ORDER BY query_start_time DESC
+WHERE type = 'QueryFinish'
+  AND event_time >= now() - INTERVAL 1 DAY
+ORDER BY memory_usage DESC
 LIMIT 10;
-
--- Failed queries
-SELECT
-    event_time,
-    query,
-    exception,
-    stack_trace
-FROM system.query_log
-WHERE event_date >= today() - 1
-  AND exception != ''
-ORDER BY event_time DESC;
 ```
 
-## Storage Monitoring
+### CPU Usage
+
+```sql
+-- Current CPU usage by query
+SELECT
+    query_id,
+    user,
+    elapsed,
+    read_rows,
+    formatReadableSize(read_bytes) as read,
+    total_rows_approx,
+    query
+FROM system.processes
+ORDER BY elapsed DESC;
+
+-- CPU usage patterns
+SELECT
+    query,
+    count() as execution_count,
+    avg(query_duration_ms) as avg_duration_ms,
+    max(query_duration_ms) as max_duration_ms,
+    sum(read_rows) as total_rows_read,
+    sum(result_rows) as total_rows_returned
+FROM system.query_log
+WHERE type = 'QueryFinish'
+  AND event_time >= now() - INTERVAL 1 DAY
+GROUP BY query
+ORDER BY avg_duration_ms DESC
+LIMIT 10;
+```
 
 ### Disk Usage
 
 ```sql
--- Overall disk usage
-SELECT
-    name,
-    path,
-    formatReadableSize(free_space) AS free,
-    formatReadableSize(total_space) AS total,
-    formatReadableSize(keep_free_space) AS reserved
-FROM system.disks;
-
 -- Database sizes
 SELECT
-    database,
-    formatReadableSize(sum(bytes_on_disk)) AS disk_size,
-    count() AS total_tables,
-    sum(rows) AS total_rows
-FROM system.parts
-WHERE active
+    name as database,
+    formatReadableSize(sum(bytes_on_disk)) as disk_usage,
+    sum(rows) as total_rows,
+    count() as total_tables
+FROM system.tables
 GROUP BY database
 ORDER BY sum(bytes_on_disk) DESC;
-```
 
-### Table Storage
-
-```sql
--- Table sizes and row counts
+-- Table sizes
 SELECT
     database,
     table,
-    formatReadableSize(sum(bytes)) AS size,
-    sum(rows) AS row_count,
-    max(modification_time) AS last_modified,
-    count() AS part_count
-FROM system.parts
-WHERE active
-GROUP BY database, table
-ORDER BY sum(bytes) DESC;
+    formatReadableSize(bytes_on_disk) as disk_usage,
+    rows as total_rows,
+    formatReadableSize(bytes_on_disk / rows) as avg_row_size
+FROM system.tables
+WHERE database NOT IN ('system')
+ORDER BY bytes_on_disk DESC
+LIMIT 10;
 
--- Storage by part
+-- Part sizes and distribution
 SELECT
     database,
     table,
     partition,
-    name AS part_name,
-    formatReadableSize(bytes) AS part_size,
-    rows,
-    modification_time
+    formatReadableSize(sum(bytes_on_disk)) as part_size,
+    count() as part_count,
+    sum(rows) as rows
 FROM system.parts
 WHERE active
-ORDER BY bytes DESC
+GROUP BY database, table, partition
+ORDER BY sum(bytes_on_disk) DESC
 LIMIT 10;
 ```
 
-## Performance Monitoring
+## Query Performance Monitoring
 
-### System Metrics
+### Slow Queries
 
 ```sql
--- Key performance metrics
-SELECT *
-FROM system.metrics
-WHERE metric IN (
-    'Query',
-    'QueryThread',
-    'QueryPreempted',
-    'TCPConnection',
-    'HTTPConnection',
-    'InterserverConnection',
-    'ReadbackgroundPoolTask'
-);
+-- Recent slow queries
+SELECT
+    query_id,
+    user,
+    query_duration_ms,
+    read_rows,
+    formatReadableSize(read_bytes) as data_read,
+    result_rows,
+    formatReadableSize(memory_usage) as memory,
+    query
+FROM system.query_log
+WHERE type = 'QueryFinish'
+  AND query_duration_ms > 1000  -- Queries taking more than 1 second
+  AND event_time >= now() - INTERVAL 1 DAY
+  AND LOWER(query) NOT LIKE '%system%'  -- Filter out system queries
+ORDER BY query_duration_ms DESC
+LIMIT 10;
 
--- Asynchronous metrics
-SELECT *
-FROM system.asynchronous_metrics
-WHERE metric LIKE '%RWLock%'
-   OR metric LIKE '%Thread%'
-   OR metric LIKE '%Memory%';
+-- Query patterns by duration
+SELECT
+    user,
+    count() as query_count,
+    avg(query_duration_ms) as avg_duration_ms,
+    max(query_duration_ms) as max_duration_ms
+FROM system.query_log
+WHERE type = 'QueryFinish'
+  AND event_time >= now() - INTERVAL 1 DAY
+GROUP BY user
+ORDER BY avg_duration_ms DESC;
 ```
 
-### Background Operations
+### Query Errors
 
 ```sql
--- Check merge operations
-SELECT *
-FROM system.merges
-WHERE is_mutation = 0;
+-- Recent query errors
+SELECT
+    user,
+    query_id,
+    event_time,
+    query_duration_ms,
+    exception,
+    query
+FROM system.query_log
+WHERE type = 'ExceptionWhileProcessing'
+  AND event_time >= now() - INTERVAL 1 DAY
+ORDER BY event_time DESC;
 
--- Monitor background tasks
-SELECT *
-FROM system.background_processing_pool;
+-- Error patterns
+SELECT
+    exception,
+    count() as error_count,
+    any(query) as sample_query
+FROM system.query_log
+WHERE type = 'ExceptionWhileProcessing'
+  AND event_time >= now() - INTERVAL 1 DAY
+GROUP BY exception
+ORDER BY error_count DESC;
 ```
 
-## Replication Status
+## System Configuration
 
-### Replica Health
-
-```sql
--- Check replica status
-SELECT
-    database,
-    table,
-    is_leader,
-    is_readonly,
-    absolute_delay,
-    queue_size,
-    inserts_in_queue,
-    merges_in_queue
-FROM system.replicas
-ORDER BY absolute_delay DESC;
-
--- Find replication issues
-SELECT
-    database,
-    table,
-    total_replicas,
-    active_replicas,
-    is_readonly,
-    is_session_expired,
-    future_parts,
-    parts_to_check
-FROM system.replicas
-WHERE is_readonly
-   OR is_session_expired
-   OR parts_to_check > 0;
-```
-
-## System Diagnostics
-
-### Error Monitoring
+### Settings Check
 
 ```sql
--- Check system errors
-SELECT
-    time,
-    level,
-    message
-FROM system.text_log
-WHERE level >= 'Error'
-  AND event_date >= today() - 1
-ORDER BY time DESC;
-
--- Monitor warnings
-SELECT
-    time,
-    level,
-    message
-FROM system.text_log
-WHERE level = 'Warning'
-  AND event_date >= today() - 1
-ORDER BY time DESC;
-```
-
-### Configuration Checks
-
-```sql
--- Check important settings
+-- Current system settings
 SELECT
     name,
     value,
     changed,
     description
 FROM system.settings
-WHERE name IN (
-    'max_memory_usage',
-    'max_concurrent_queries',
-    'max_connections',
-    'max_table_size_to_drop',
-    'max_partition_size_to_drop'
-);
+WHERE changed = 1
+ORDER BY name;
 
--- Review access rights
+-- User settings
 SELECT
-    user,
-    access_type,
+    *
+FROM system.users
+FORMAT Vertical;
+```
+
+### Replication Status
+
+```sql
+-- Replication delays
+SELECT
     database,
     table,
-    column,
-    is_partial_revoke
-FROM system.access_rights
-ORDER BY user, access_type;
+    is_leader,
+    total_replicas,
+    active_replicas,
+    formatReadableSize(queue_size) as queue_size,
+    absolute_delay
+FROM system.replicas
+ORDER BY absolute_delay DESC;
+
+-- Replication queue
+SELECT
+    database,
+    table,
+    count() as queue_entries,
+    max(create_time) as latest_entry
+FROM system.replication_queue
+GROUP BY database, table
+ORDER BY queue_entries DESC;
 ```
+
+## Best Practices
+
+1. Monitor memory usage regularly to prevent OOM issues
+2. Track slow queries and optimize them
+3. Keep an eye on disk usage and partition sizes
+4. Monitor replication delays in distributed setups
+5. Check error patterns periodically
+6. Review system settings after updates
+
+## References
+
+- [@ClickHouseSQL System Tables](https://clickhouse.com/docs/en/operations/system-tables)
+- [@Web Monitoring](https://clickhouse.com/docs/en/operations/monitoring)
+- [@ClickHouseSQL Query Log](https://clickhouse.com/docs/en/operations/system-tables/query_log)

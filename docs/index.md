@@ -1,7 +1,7 @@
 # ClickHouse SQL Reference Sheet
 
-A comprehensive SQL command reference sheet for ClickHouse Cloud field engineers. This guide provides essential SQL
-commands, best practices, and optimization techniques for working with ClickHouse deployments.
+A comprehensive SQL command reference sheet for ClickHouse Cloud field team. This guide provides essential SQL commands,
+best practices, and optimization techniques for working with ClickHouse deployments.
 
 ## 📊 Quick Health Checks
 
@@ -19,6 +19,8 @@ SELECT metric, value, description
 FROM system.metrics
 LIMIT 5;                           -- Preview key system metrics
 ```
+
+For detailed system monitoring queries, see [System Monitoring Guide](system-commands/monitoring.md).
 
 ## 🔍 Query Analysis and Performance
 
@@ -72,6 +74,8 @@ ORDER BY event_time DESC
 LIMIT 10;
 ```
 
+For detailed performance monitoring, see [Performance Analysis Guide](system-commands/performance.md).
+
 ### Query Performance Patterns
 
 ```sql
@@ -120,6 +124,51 @@ FROM system.query_log
 WHERE type IN ('QueryStart', 'QueryFinish', 'ExceptionWhileProcessing')
   AND event_date >= today() - 1
 ORDER BY query_id, event_time;
+```
+
+### Cost and Resource Analysis
+
+```sql
+-- Top 10 Most Expensive Queries by Cost
+SELECT
+    query_id,
+    ROUND(AVG(query_duration_ms / 1000), 5) AS avg_duration_seconds,
+    concat(ROUND(MAX((memory_usage / 1024) / 1024)), ' MB') AS mem_usage_MB,
+    concat('$', ROUND((AVG((memory_usage / 1024) / 1024) * ((0.29874 / 8192) / 3600000)) * AVG(query_duration_ms), 5)) AS cost_per_query
+FROM clusterAllReplicas(default, system.query_log)
+WHERE (type = 'QueryFinish')
+  AND (query_kind = 'Select')
+  AND (user NOT ILIKE '%internal%')
+GROUP BY query_id
+HAVING MAX((memory_usage / 1024) / 1024) > 1
+ORDER BY cost_per_query DESC
+LIMIT 10;
+
+-- Detailed Query Performance Metrics
+SELECT
+    toStartOfHour(event_time) AS ts,
+    countDistinct(normalized_query_hash) AS query_uniq,
+    count() AS query_count,
+    round(query_count / 60) AS qps,
+    min(query_duration_ms) AS time_min,
+    round(quantile(0.5)(query_duration_ms)) AS time_p50,
+    round(quantile(0.9)(query_duration_ms)) AS time_p90,
+    round(quantile(0.99)(query_duration_ms)) AS time_p99,
+    max(query_duration_ms) AS time_max,
+    formatReadableSize(min(memory_usage)) AS mem_min,
+    formatReadableSize(quantile(0.5)(memory_usage)) AS mem_p50,
+    formatReadableSize(quantile(0.9)(memory_usage)) AS mem_p90,
+    formatReadableSize(max(memory_usage)) AS mem_max,
+    formatReadableSize(sum(memory_usage)) AS mem_sum
+FROM clusterAllReplicas(default, merge(system, '^query_log*'))
+WHERE (type = 'QueryFinish')
+  AND (query_kind = 'Select')
+  AND (event_time >= (now() - toIntervalDay(3)))
+  AND (event_time <= now())
+  AND (user NOT ILIKE '%internal%')
+GROUP BY ts
+ORDER BY ts ASC
+SETTINGS skip_unavailable_shards = 1;
 ```
 
 ## 📈 System Performance Monitoring
@@ -206,6 +255,72 @@ WHERE active
   AND database = 'your_database'    -- Replace with your database
 ORDER BY data_compressed_bytes DESC
 LIMIT 20;
+```
+
+### Cluster Health and Resources
+
+```sql
+-- Check Cluster Size and Resources
+SELECT *
+FROM clusterAllReplicas('default', view(
+    SELECT
+        hostname() AS server,
+        getSetting('max_threads') as cpu_cores,
+        formatReadableSize(getSetting('max_memory_usage')) as memory
+    FROM system.one
+))
+ORDER BY server ASC
+SETTINGS skip_unavailable_shards = 1;
+
+-- OR
+SELECT
+    now(),
+    hostname(),
+    getSetting('max_threads'),
+    formatReadableSize(getSetting('max_memory_usage'))
+FROM clusterAllReplicas(default, system.one)
+```
+
+### Cache Performance Analysis
+
+```sql
+-- Compare Cache vs Storage Read Performance
+SELECT
+   hostName(),
+   query_id,
+   query_start_time_microseconds,
+   query_duration_ms,
+   read_rows,
+   formatReadableSize(ProfileEvents['CachedReadBufferReadFromCacheBytes']) AS read_from_cache,
+   formatReadableSize(ProfileEvents['CachedReadBufferReadFromSourceBytes']) AS read_from_storage
+FROM clusterAllReplicas('default', system.query_log)
+WHERE type = 'QueryFinish'
+ORDER BY query_start_time_microseconds ASC;
+```
+
+### Query Progress Monitoring
+
+```sql
+-- Monitor Running Query Progress
+SELECT
+    query_id,
+    (100 * read_rows) / total_rows_approx AS progress_percentage,
+    elapsed AS elapsed_time,
+    (elapsed / (read_rows / total_rows_approx)) * (1 - (read_rows / total_rows_approx)) AS estimated_remaining_time
+FROM system.processes
+WHERE is_cancelled = 0;
+```
+
+### Profile Events Analysis
+
+```sql
+-- Query All Profile Events
+SELECT
+    name AS metric_name,
+    value AS metric_value
+FROM system.metrics
+WHERE name LIKE 'ProfileEvent%'
+ORDER BY metric_name;
 ```
 
 ## Quick Reference
@@ -898,18 +1013,33 @@ ORDER BY query_duration_ms DESC;
 
 ## Best Practices
 
-1. Always use `LIMIT` with large tables
-2. Use `PREWHERE` for more efficient filtering
-3. Monitor memory usage with settings like `max_memory_usage`
-4. Use data skipping indexes for large tables
-5. Implement row-level security for sensitive data
-6. Regularly review and optimize query performance
+01. Always use `LIMIT` with large tables
+02. Use `PREWHERE` for more efficient filtering
+03. Monitor memory usage with settings like `max_memory_usage`
+04. Use data skipping indexes for large tables
+05. Implement row-level security for sensitive data
+06. Regularly review and optimize query performance
+07. Always use `skip_unavailable_shards = 1` when querying across clusters to handle node failures gracefully
+08. Filter out internal queries using `user NOT ILIKE '%internal%'` for accurate application metrics
+09. Use `formatReadableSize()` for human-readable byte values
+10. Consider time windows in queries to avoid processing too much historical data
+11. Use appropriate time intervals (hour, day, etc.) based on your monitoring needs
+12. Monitor query costs and resource usage to optimize expensive operations
+13. Regularly analyze cache vs storage performance to optimize data access patterns
+14. Keep track of compression ratios to ensure efficient storage utilization
+
+## Quick Links
+
+- [System Monitoring](system-commands/monitoring.md)
+- [Query Optimization](advanced-operations/optimization.md)
+- [Security Guide](advanced-operations/security.md)
+- [Maintenance Guide](advanced-operations/maintenance.md)
 
 ## References
 
-- [ClickHouse SQL Reference](https://clickhouse.com/docs/en/sql-reference/statements/select)
-- [ClickHouse System Tables](https://clickhouse.com/docs/en/operations/system-tables)
-- [ClickHouse RBAC](https://clickhouse.com/docs/en/operations/access-rights)
+- [@ClickHouseSQL Reference](https://clickhouse.com/docs/en/sql-reference)
+- [@Web System Tables](https://clickhouse.com/docs/en/operations/system-tables)
+- [@ClickHouseSQL Performance](https://clickhouse.com/docs/en/operations/performance-tuning)
 
 ### Query Optimization Analysis
 
@@ -1092,3 +1222,5 @@ FROM system.merges
 WHERE is_mutation
 ORDER BY elapsed DESC;
 ```
+
+[@Web Reference](https://clickhouse.com/docs/en/operations/monitoring)

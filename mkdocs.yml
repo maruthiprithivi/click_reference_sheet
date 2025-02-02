@@ -3,11 +3,14 @@ site_url: https://maruthiprithivi.github.io/click_reference_sheet/ # Update with
 repo_url: https://github.com/maruthiprithivi/click_reference_sheet # Update with your GitHub username
 repo_name: click_reference_sheet
 edit_uri: edit/main/docs/
-site_description: A comprehensive SQL command reference sheet for ClickHouse Cloud field engineers # Site description
+site_description: A comprehensive SQL command reference sheet for ClickHouse Cloud Field Team # Site description
 
 theme:
   name: material
   language: en
+  icon:
+    logo: material/database # Adding database icon
+    repo: fontawesome/brands/github # GitHub repository icon
   features:
     - navigation.tabs
     - navigation.sections
@@ -71,5 +74,6 @@ nav:
       - Monitoring: system-commands/monitoring.md
       - Performance: system-commands/performance.md
   - Advanced Operations:
-      - Materialized Views: advanced-operations/materialized-views.md
-      - Distributed Tables: advanced-operations/distributed-tables.md
+      - Maintenance: advanced-operations/maintenance.md
+      - Optimization: advanced-operations/optimization.md
+      - Security: advanced-operations/security.md
