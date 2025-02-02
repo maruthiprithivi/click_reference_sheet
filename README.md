@@ -3,8 +3,6 @@
 A comprehensive SQL command reference sheet for ClickHouse Cloud field engineers. This documentation is built using
 Material for MkDocs and contains essential SQL commands, best practices, and optimization techniques.
 
-[![Deploy MkDocs to GitHub Pages](https://github.com/your-username/click_reference_sheet/actions/workflows/deploy.yml/badge.svg)](https://github.com/your-username/click_reference_sheet/actions/workflows/deploy.yml)
-
 ## 📚 Contents
 
 - Basic Operations (Connection, Databases, Tables)
