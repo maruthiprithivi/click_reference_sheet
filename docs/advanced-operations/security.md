@@ -195,7 +195,7 @@ WHERE type = 'ExceptionBeforeStart'
 ORDER BY event_time DESC;
 ```
 
-## Best Practices
+<!-- ## Best Practices
 
 1. Use strong passwords and SHA-256 password hashing
 2. Implement principle of least privilege
@@ -203,7 +203,7 @@ ORDER BY event_time DESC;
 4. Enable and monitor query logging
 5. Use row-level security for sensitive data
 6. Implement proper network security
-7. Regular security audits
+7. Regular security audits -->
 
 ## Troubleshooting
 
@@ -238,8 +238,9 @@ WHERE event_date >= today()
 ORDER BY event_time DESC;
 ```
 
+<!--
 ## References
 
 - [@ClickHouseSQL Security](https://clickhouse.com/docs/en/operations/security)
 - [@Web Access Control](https://clickhouse.com/docs/en/operations/access-rights)
-- [@ClickHouseSQL System Tables](https://clickhouse.com/docs/en/operations/system-tables/users)
+- [@ClickHouseSQL System Tables](https://clickhouse.com/docs/en/operations/system-tables/users) -->

@@ -11,7 +11,7 @@ This guide covers various techniques for optimizing query performance in ClickHo
 - Memory management
 - Data skipping optimization
 
-[@ClickHouseSQL Reference](https://clickhouse.com/docs/en/sql-reference/statements/select)
+<!-- [@ClickHouseSQL Reference](https://clickhouse.com/docs/en/sql-reference/statements/select) -->
 
 ## Query Structure Optimization
 
@@ -87,7 +87,7 @@ WHERE description LIKE '%error%';  -- Filter on large column later
 - **Engine Support**: Ensure your table engine (MergeTree family) supports PREWHERE
 - **Performance Monitoring**: Regularly analyze query performance with and without PREWHERE
 
-### Optimizing JOINs
+<!-- ### Optimizing JOINs
 
 ```sql
 -- Example: Join optimization with proper table order
@@ -100,7 +100,7 @@ WHERE e.event_date >= today() - 7
 GROUP BY u.name;
 ```
 
-**Best Practice**: Place larger tables first in JOIN operations.
+**Best Practice**: Place larger tables first in JOIN operations. -->
 
 ## Index Usage
 
@@ -190,7 +190,7 @@ SELECT * FROM events WHERE event_date = today() SETTINGS profile=1;
 
 For performance monitoring queries, see [System Monitoring Guide](../system-commands/monitoring.md).
 
-## Best Practices
+<!-- ## Best Practices
 
 1. Always use appropriate indexes
 2. Leverage partitioning for large tables
@@ -198,10 +198,11 @@ For performance monitoring queries, see [System Monitoring Guide](../system-comm
 4. Monitor and limit memory usage
 5. Use sampling for approximate analysis of large datasets
 6. Regularly analyze query performance
-7. Optimize JOIN operations
+7. Optimize JOIN operations -->
 
+<!--
 ## References
 
 - [@ClickHouseSQL Query Optimization](https://clickhouse.com/docs/en/sql-reference/statements/select#optimization)
 - [@Web Performance Tuning](https://clickhouse.com/docs/en/operations/performance-tuning)
-- [@ClickHouseSQL System Tables](https://clickhouse.com/docs/en/operations/system-tables)
+- [@ClickHouseSQL System Tables](https://clickhouse.com/docs/en/operations/system-tables) -->

@@ -60,7 +60,7 @@ ORDER BY start_time DESC
 LIMIT 10;
 ```
 
-## Maintenance Schedule
+<!-- ## Maintenance Schedule
 
 ### Daily Tasks
 
@@ -81,7 +81,7 @@ LIMIT 10;
 1. Full system audit
 2. Capacity planning
 3. Performance optimization
-4. Security review
+4. Security review -->
 
 ## Data Management
 
@@ -146,7 +146,7 @@ GRANT SELECT, INSERT ON database.* TO username;
 SHOW GRANTS FOR username;
 ```
 
-## Troubleshooting Guide
+<!-- ## Troubleshooting Guide
 
 ### Common Issues
 
@@ -169,7 +169,7 @@ SHOW GRANTS FOR username;
    - Verify network connectivity
    - Check replication queue
    - Restart problematic replicas
-   - Re-initialize if necessary
+   - Re-initialize if necessary -->
 
 ## Recovery Procedures
 
@@ -186,7 +186,7 @@ RESTORE TABLE database.table FROM '/path/to/backup';
 SELECT count() FROM database.table;
 ```
 
-### System Recovery
+<!-- ### System Recovery
 
 1. Stop ClickHouse service
 2. Backup configuration files
@@ -209,4 +209,4 @@ SELECT count() FROM database.table;
 
 - [@ClickHouseSQL Backup and Restore](https://clickhouse.com/docs/en/operations/backup)
 - [@Web Administration Guide](https://clickhouse.com/docs/en/operations/administration)
-- [@ClickHouseSQL System Tables](https://clickhouse.com/docs/en/operations/system-tables)
+- [@ClickHouseSQL System Tables](https://clickhouse.com/docs/en/operations/system-tables) -->

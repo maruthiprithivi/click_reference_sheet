@@ -214,6 +214,7 @@ GROUP BY database, table
 ORDER BY queue_entries DESC;
 ```
 
+<!--
 ## Best Practices
 
 1. Monitor memory usage regularly to prevent OOM issues
@@ -227,4 +228,4 @@ ORDER BY queue_entries DESC;
 
 - [@ClickHouseSQL System Tables](https://clickhouse.com/docs/en/operations/system-tables)
 - [@Web Monitoring](https://clickhouse.com/docs/en/operations/monitoring)
-- [@ClickHouseSQL Query Log](https://clickhouse.com/docs/en/operations/system-tables/query_log)
+- [@ClickHouseSQL Query Log](https://clickhouse.com/docs/en/operations/system-tables/query_log) -->

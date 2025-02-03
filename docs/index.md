@@ -1,7 +1,7 @@
 # ClickHouse SQL Reference Sheet
 
-A comprehensive SQL command reference sheet for ClickHouse Cloud field team. This guide provides essential SQL commands,
-best practices, and optimization techniques for working with ClickHouse deployments.
+A quick SQL command reference sheet for ClickHouse Cloud field team. This guide provides essential SQL commands for
+working with ClickHouse deployments.
 
 ## 📊 Quick Health Checks
 
@@ -659,7 +659,7 @@ GROUP BY database, table
 ORDER BY ratio DESC;
 ```
 
-## Best Practices
+<!-- ## Best Practices
 
 ### Query Optimization
 
@@ -683,7 +683,7 @@ ORDER BY ratio DESC;
 2. Track query performance and patterns
 3. Optimize storage and compression settings
 4. Maintain proper backup strategies
-5. Regular cleanup of old data
+5. Regular cleanup of old data -->
 
 ## Troubleshooting
 
@@ -729,13 +729,13 @@ WHERE level >= 'Error'
 ORDER BY time DESC;
 ```
 
-### Performance Issues
+<!-- ### Performance Issues
 
 1. Check system metrics
 2. Analyze query patterns
 3. Review table structure and indexes
 4. Monitor background operations
-5. Verify resource utilization
+5. Verify resource utilization -->
 
 ## Advanced Query Monitoring and Performance Analysis
 
@@ -1011,22 +1011,22 @@ WHERE
 ORDER BY query_duration_ms DESC;
 ```
 
-## Best Practices
+<!-- ## Best Practices
 
-01. Always use `LIMIT` with large tables
-02. Use `PREWHERE` for more efficient filtering
-03. Monitor memory usage with settings like `max_memory_usage`
-04. Use data skipping indexes for large tables
-05. Implement row-level security for sensitive data
-06. Regularly review and optimize query performance
-07. Always use `skip_unavailable_shards = 1` when querying across clusters to handle node failures gracefully
-08. Filter out internal queries using `user NOT ILIKE '%internal%'` for accurate application metrics
-09. Use `formatReadableSize()` for human-readable byte values
+1.  Always use `LIMIT` with large tables
+2.  Use `PREWHERE` for more efficient filtering
+3.  Monitor memory usage with settings like `max_memory_usage`
+4.  Use data skipping indexes for large tables
+5.  Implement row-level security for sensitive data
+6.  Regularly review and optimize query performance
+7.  Always use `skip_unavailable_shards = 1` when querying across clusters to handle node failures gracefully
+8.  Filter out internal queries using `user NOT ILIKE '%internal%'` for accurate application metrics
+9.  Use `formatReadableSize()` for human-readable byte values
 10. Consider time windows in queries to avoid processing too much historical data
 11. Use appropriate time intervals (hour, day, etc.) based on your monitoring needs
 12. Monitor query costs and resource usage to optimize expensive operations
 13. Regularly analyze cache vs storage performance to optimize data access patterns
-14. Keep track of compression ratios to ensure efficient storage utilization
+14. Keep track of compression ratios to ensure efficient storage utilization -->
 
 ## Quick Links
 
@@ -1035,11 +1035,11 @@ ORDER BY query_duration_ms DESC;
 - [Security Guide](advanced-operations/security.md)
 - [Maintenance Guide](advanced-operations/maintenance.md)
 
-## References
+<!-- ## References
 
 - [@ClickHouseSQL Reference](https://clickhouse.com/docs/en/sql-reference)
 - [@Web System Tables](https://clickhouse.com/docs/en/operations/system-tables)
-- [@ClickHouseSQL Performance](https://clickhouse.com/docs/en/operations/performance-tuning)
+- [@ClickHouseSQL Performance](https://clickhouse.com/docs/en/operations/performance-tuning) -->
 
 ### Query Optimization Analysis
 
@@ -1223,4 +1223,4 @@ WHERE is_mutation
 ORDER BY elapsed DESC;
 ```
 
-[@Web Reference](https://clickhouse.com/docs/en/operations/monitoring)
+<!-- [@Web Reference](https://clickhouse.com/docs/en/operations/monitoring) -->

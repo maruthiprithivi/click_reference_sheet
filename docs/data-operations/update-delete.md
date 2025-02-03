@@ -225,14 +225,14 @@ WHERE table = 'table_name'
 GROUP BY table;
 ```
 
-### Best Practices Summary
+<!-- ### Best Practices Summary
 
 1. Always use WHERE clause to limit the scope of mutations
 2. Monitor mutation progress and resource usage
 3. Consider breaking large mutations into smaller batches
 4. Have a rollback plan for large-scale mutations
 5. Schedule mutations during off-peak hours
-6. Regular monitoring of mutation performance and status
+6. Regular monitoring of mutation performance and status -->
 
 ### Mutation Settings
 
