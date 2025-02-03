@@ -3,7 +3,7 @@ site_url: https://maruthiprithivi.github.io/click_reference_sheet/ # Update with
 repo_url: https://github.com/maruthiprithivi/click_reference_sheet # Update with your GitHub username
 repo_name: click_reference_sheet
 edit_uri: edit/main/docs/
-site_description: A comprehensive SQL command reference sheet for ClickHouse Cloud Field Team # Site description
+site_description: A quick reference SQL command sheet for ClickHouse Cloud Field Team # Site description
 
 theme:
   name: material

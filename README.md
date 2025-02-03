@@ -1,7 +1,7 @@
 # ClickHouse SQL Reference Sheet
 
-A comprehensive SQL command reference sheet for ClickHouse Cloud field engineers. This documentation is built using
-Material for MkDocs and contains essential SQL commands, best practices, and optimization techniques.
+A quick reference SQL command sheet for ClickHouse Cloud field engineers. This documentation is built using Material for
+MkDocs and contains essential SQL commands.
 
 ## 📚 Contents
 
