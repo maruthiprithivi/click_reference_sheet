@@ -17,6 +17,10 @@ This guide covers various techniques for optimizing query performance in ClickHo
 
 ### Using PREWHERE
 
+PREWHERE is a powerful optimization feature in ClickHouse designed to improve query performance by filtering data early
+in the query execution process. This early filtering reduces the amount of data read from disk, leading to faster query
+execution times.
+
 ```sql
 -- Example: Using PREWHERE for better filtering performance
 SELECT
@@ -27,9 +31,61 @@ FROM events
 PREWHERE event_date = today()  -- Executed before WHERE, reduces data read
 WHERE event_type = 'click'
 LIMIT 100;
+
+-- Example: Multiple columns in PREWHERE
+SELECT
+    user_id,
+    event_type,
+    value
+FROM events
+PREWHERE (event_date = today() AND user_id = 123)  -- Highly selective combined condition
+WHERE value > 1000;
+
+-- Example: Using PREWHERE with small columns
+SELECT
+    description,  -- Large column
+    status_code,  -- Small column
+    user_id       -- Small column
+FROM events
+PREWHERE status_code = 200  -- Filter on small column first
+WHERE description LIKE '%error%';  -- Filter on large column later
 ```
 
-**When to use**: Use PREWHERE when filtering on columns that can significantly reduce the data before processing.
+#### Best Practices for PREWHERE
+
+1. **Selective Filtering**
+
+   - Use PREWHERE for highly selective conditions (e.g., unique identifiers)
+   - Avoid using it for conditions matching large portions of data
+   - Combine multiple conditions in PREWHERE when they remain highly selective
+
+2. **Column Size Consideration**
+
+   - Small Columns:
+     - Use PREWHERE with columns having minimal storage (e.g., Int8, Int16, Float32)
+     - Examples: status codes, age, small fixed-length strings
+   - Large Columns:
+     - Avoid using PREWHERE with large columns (e.g., long texts, large arrays)
+     - Examples: detailed descriptions, JSON blobs, large string columns
+
+3. **Multiple Column Strategy**
+
+   - Combine multiple small columns in PREWHERE for better filtering
+   - Ensure combined conditions maintain high selectivity
+   - Order conditions from most to least selective
+
+4. **PREWHERE and WHERE Combination**
+
+   - Use PREWHERE for early, highly selective filtering
+   - Use WHERE for additional, less selective conditions
+   - Let PREWHERE handle small columns while WHERE processes larger ones
+
+#### Additional Considerations
+
+- **Automatic Optimization**: ClickHouse can automatically move WHERE conditions to PREWHERE
+- **Manual Control**: Explicitly using PREWHERE provides finer control over optimization
+- **Engine Support**: Ensure your table engine (MergeTree family) supports PREWHERE
+- **Performance Monitoring**: Regularly analyze query performance with and without PREWHERE
 
 ### Optimizing JOINs
 
