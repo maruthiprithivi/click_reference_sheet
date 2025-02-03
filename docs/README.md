@@ -1,7 +1,7 @@
 # ClickHouse SQL Reference Documentation
 
-This documentation provides a comprehensive guide to ClickHouse SQL commands, organized by functionality and complexity
-level.
+This documentation provides a quick reference guide to ClickHouse SQL commands, organized by functionality and
+complexity level.
 
 ## 📁 Directory Structure
 
@@ -36,9 +36,10 @@ Each documentation file follows a consistent structure:
 1. **Overview**: Brief introduction to the topic
 2. **Basic Usage**: Essential commands with examples
 3. **Advanced Usage**: Complex operations and features
-4. **Best Practices**: Recommended approaches
-5. **Troubleshooting**: Common issues and solutions
-6. **References**: Links to official documentation
+
+<!-- 4. **Best Practices**: Recommended approaches
+4. **Troubleshooting**: Common issues and solutions
+5. **References**: Links to official documentation -->
 
 ## 📚 Quick Links
 
@@ -52,7 +53,7 @@ Each documentation file follows a consistent structure:
 
 1. Start with `index.md` for quick reference
 2. Use the directory structure to find specific operations
-3. Each command includes:
+3. Each command includes (WIP):
    - Syntax explanation
    - Example usage
    - Common options
